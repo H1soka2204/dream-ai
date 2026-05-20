@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="chat-page">
+    <div class="page-hero compact">
+        <p class="eyebrow">Gemini AI</p>
+        <h1>{{ t("AI чат") }}</h1>
+        <p>{{ t("Персональный помощник для учебных тем, тестов, ошибок и планов повторения.") }}</p>
+    </div>
+
+    <div class="chat-layout">
+        <aside class="chat-side">
+            <div>
+                <p class="eyebrow">{{ t("Статус") }}</p>
+                <h2>Gemini</h2>
+                <span class="status-pill {% if gemini_enabled %}ok{% else %}warn{% endif %}" data-chat-provider>
+                    {{ t("Подключен") if gemini_enabled else "Fallback" }}
+                </span>
+            </div>
+            <div class="chat-meta">
+                <span>{{ t("Модель") }}</span>
+                <strong>{{ gemini_model }}</strong>
+            </div>
+            <div class="quick-prompts">
+                <button type="button" data-chat-suggestion="{{ t('Объясни простыми словами тему, которую я сейчас изучаю.') }}">{{ t("Объяснить тему") }}</button>
+                <button type="button" data-chat-suggestion="{{ t('Помоги разобрать ошибку в тесте и понять правильный ход решения.') }}">{{ t("Разобрать ошибку") }}</button>
+                <button type="button" data-chat-suggestion="{{ t('Составь короткий план повторения на 3 дня.') }}">{{ t("План повторения") }}</button>
+            </div>
+        </aside>
+
+        <section class="chat-panel" data-ai-chat data-endpoint="{{ url_for('api.api_ai_chat') }}" data-initial-prompt="{{ initial_prompt or '' }}">
+            <div class="chat-messages" data-chat-messages aria-live="polite">
+                <div class="chat-message assistant">
+                    <div class="chat-bubble">
+                        {{ t("Привет! Я Gemini AI-чат. Могу помочь разобрать тему, ошибку в тесте или составить план подготовки.") }}
+                    </div>
+                </div>
+            </div>
+
+            <form class="chat-form" data-chat-form>
+                <textarea data-chat-input rows="2" placeholder="{{ t('Спросите про тему, тест или ошибку') }}" maxlength="4000" required></textarea>
+                <button class="button button-primary" type="submit">{{ t("Отправить") }}</button>
+            </form>
+        </section>
+    </div>
+</section>
+{% endblock %}

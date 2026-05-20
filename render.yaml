@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: dream-ai
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn main:app
+    autoDeployTrigger: commit
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: AI_PROVIDER
+        value: fallback
+      - key: PYTHON_VERSION
+        value: 3.12.7

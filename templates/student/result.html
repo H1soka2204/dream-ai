@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="result-hero">
+    <div>
+        <p class="eyebrow">{{ t("Результат теста") }}</p>
+        <h1>{{ t(result.test.title) }}</h1>
+        <p>{{ t(result.test.course.title) }} · {{ result.created_at.strftime("%d.%m.%Y %H:%M") }}</p>
+        <div class="hero-actions">
+            <a class="button button-primary" href="{{ url_for('student.recommendations') }}">{{ t("AI-рекомендации") }}</a>
+            <a class="button button-secondary" href="{{ url_for('student.export_result_pdf', result_id=result.id) }}">{{ t("Экспорт PDF") }}</a>
+        </div>
+    </div>
+    <div class="score-ring" style="--score: {{ result.score|round(0) }}">
+        <div class="score-ring-content">
+            <span>{{ result.score|round(0) }}%</span>
+        <small>{{ t("Пройден") if result.passed else t("Нужно повторить") }}</small>
+        </div>
+    </div>
+</section>
+
+<section class="section two-column">
+    <div class="result-panel">
+        <p class="eyebrow">{{ t("Анализ") }}</p>
+        <h2>{{ result.correct_answers }} {{ t("из") }} {{ result.total_questions }} {{ t("правильных ответов") }}</h2>
+        {% if result.wrong_topics %}
+            <p>{{ t("Слабые темы") }}:</p>
+            <div class="tag-stack">
+                {% for topic in result.wrong_topics %}
+                    <span>{{ t(topic) }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>{{ t("Ошибок не найдено. Можно переходить к следующему уровню.") }}</p>
+        {% endif %}
+    </div>
+
+    <div class="recommend-panel">
+        <p class="eyebrow">{{ t("AI-наставник") }}</p>
+        <h2>{{ t("Рекомендация") }}</h2>
+        {% if result.recommendation %}
+            <p>{{ result.recommendation.summary }}</p>
+            <div class="plan-list">
+                {% for line in result.recommendation.plan.split('\n') %}
+                    <span>{{ line }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading align-left">
+        <p class="eyebrow">{{ t("Разбор ошибок") }}</p>
+        <h2>{{ t("Ответы и объяснения") }}</h2>
+    </div>
+    <div class="review-list">
+        {% for answer in result.answers_payload %}
+            <article class="review-item {% if answer.is_correct %}correct{% else %}wrong{% endif %}">
+                <div class="review-status">{{ t("Верно") if answer.is_correct else t("Ошибка") }}</div>
+                <h3>{{ t(answer.question) }}</h3>
+                <p><strong>{{ t("Ваш ответ:") }}</strong> {{ t(answer.selected) }}</p>
+                {% if not answer.is_correct %}
+                    <p><strong>{{ t("Правильный ответ:") }}</strong> {{ t(answer.correct) }}</p>
+                {% endif %}
+                <p>{{ t(answer.explanation) }}</p>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

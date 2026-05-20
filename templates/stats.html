@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero compact">
+    <p class="eyebrow">{{ t("Статистика") }}</p>
+    <h1>{{ t("Общая аналитика платформы") }}</h1>
+    <p>{{ t("Сводка по пользователям, курсам, тестам и результатам обучения.") }}</p>
+</section>
+
+<section class="section">
+    <div class="metric-grid">
+        <div class="metric-card"><span>{{ overview.users }}</span><p>{{ t("Пользователей") }}</p></div>
+        <div class="metric-card"><span>{{ overview.courses }}</span><p>{{ t("Курсов") }}</p></div>
+        <div class="metric-card"><span>{{ overview.tests }}</span><p>{{ t("Тестов") }}</p></div>
+        <div class="metric-card"><span>{{ overview.avg_score }}%</span><p>{{ t("Средний результат") }}</p></div>
+    </div>
+</section>
+
+<section class="section two-column">
+    <div class="chart-panel">
+        <div class="section-heading align-left">
+            <p class="eyebrow">{{ t("Роли") }}</p>
+            <h2>{{ t("Состав пользователей") }}</h2>
+        </div>
+        <canvas class="bar-chart" data-chart='[
+            {"label": "{{ t('Ученики') }}", "value": {{ overview.roles.get("student", 0) }}},
+            {"label": "{{ t('Преподаватели') }}", "value": {{ overview.roles.get("teacher", 0) }}},
+            {"label": "{{ t('Администраторы') }}", "value": {{ overview.roles.get("admin", 0) }}}
+        ]'></canvas>
+    </div>
+    <div class="table-panel">
+        <div class="section-heading align-left">
+            <p class="eyebrow">{{ t("Последние тесты") }}</p>
+            <h2>{{ t("Недавние результаты") }}</h2>
+        </div>
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr><th>{{ t("Ученик") }}</th><th>{{ t("Тест") }}</th><th>{{ t("Результат") }}</th><th>{{ t("Дата") }}</th></tr>
+                </thead>
+                <tbody>
+                    {% for result in recent_results %}
+                        <tr>
+                            <td>{{ t(result.student.name) }}</td>
+                            <td>{{ t(result.test.title) }}</td>
+                            <td>{{ result.score|round(0) }}%</td>
+                            <td>{{ result.created_at.strftime("%d.%m.%Y") }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="4">{{ t("Результатов пока нет") }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

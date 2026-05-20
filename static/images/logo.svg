@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="logo-title">
+  <title id="logo-title">AI Edu Test logo</title>
+  <defs>
+    <linearGradient id="logoGradient" x1="120" y1="780" x2="900" y2="230" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0ea5e9"/>
+      <stop offset="0.45" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#8b20f3"/>
+    </linearGradient>
+    <linearGradient id="logoGradientAlt" x1="150" y1="290" x2="850" y2="820" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#18b8ee"/>
+      <stop offset="0.55" stop-color="#3458e8"/>
+      <stop offset="1" stop-color="#8b20f3"/>
+    </linearGradient>
+  </defs>
+
+  <g fill="none" stroke="url(#logoGradient)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M267 510c-32 8-55 36-55 71 0 14 4 27 11 39-33 12-56 43-56 80 0 44 34 80 77 84" stroke-width="36"/>
+    <path d="M757 510c32 8 55 36 55 71 0 14-4 27-11 39 33 12 56 43 56 80 0 44-34 80-77 84" stroke-width="36"/>
+    <path d="M262 509c5-58 49-102 104-102 0-79 59-122 146-122v258" stroke-width="36"/>
+    <path d="M762 509c-5-58-49-102-104-102 0-79-59-122-146-122v258" stroke-width="36"/>
+    <path d="M512 285c-82 0-151 20-151 55v42" stroke="#ffffff" stroke-width="12"/>
+    <path d="M512 285c82 0 151 20 151 55v42" stroke="#ffffff" stroke-width="12"/>
+  </g>
+
+  <g fill="url(#logoGradientAlt)">
+    <path d="M512 116 197 265l315 149 315-149L512 116Z"/>
+    <path d="M789 263h27v92h-27z"/>
+    <circle cx="803" cy="388" r="14"/>
+    <path d="M803 402c-15 31-22 56-22 75 0 11 9 20 22 20s22-9 22-20c0-19-7-44-22-75Z"/>
+    <path d="M138 640c134 13 265 64 374 204-116-73-250-96-411-68l25-92 21-4-11 58c95-17 192-12 291 27-82-64-184-102-315-116l26-9Z"/>
+    <path d="M886 640c-134 13-265 64-374 204 116-73 250-96 411-68l-25-92-21-4 11 58c-95-17-192-12-291 27 82-64 184-102 315-116l-26-9Z"/>
+  </g>
+
+  <g fill="none" stroke="url(#logoGradient)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16">
+    <path d="M408 355v66l31 31v63"/>
+    <path d="M366 418v60l35 36v45"/>
+    <path d="M325 482l47 48 17 59 47 48"/>
+    <path d="M284 540l42 14 28 48 48 43v41"/>
+    <path d="M270 609h60l48 47v42"/>
+    <path d="M300 675h28"/>
+    <circle cx="408" cy="341" r="17"/>
+    <circle cx="366" cy="409" r="17"/>
+    <circle cx="323" cy="472" r="17"/>
+    <circle cx="279" cy="532" r="17"/>
+    <circle cx="266" cy="609" r="17"/>
+    <circle cx="300" cy="675" r="17"/>
+    <circle cx="439" cy="543" r="17"/>
+
+    <path d="M616 355v66l-31 31v63"/>
+    <path d="M658 418v60l-35 36v45"/>
+    <path d="M699 482l-47 48-17 59-47 48"/>
+    <path d="M740 540l-42 14-28 48-48 43v41"/>
+    <path d="M754 609h-60l-48 47v42"/>
+    <path d="M724 675h-28"/>
+    <circle cx="616" cy="341" r="17"/>
+    <circle cx="658" cy="409" r="17"/>
+    <circle cx="701" cy="472" r="17"/>
+    <circle cx="745" cy="532" r="17"/>
+    <circle cx="758" cy="609" r="17"/>
+    <circle cx="724" cy="675" r="17"/>
+    <circle cx="585" cy="543" r="17"/>
+  </g>
+
+  <g>
+    <circle cx="512" cy="699" r="88" fill="#ffffff" stroke="url(#logoGradient)" stroke-width="18"/>
+    <path d="m455 697 42 42 83-88" fill="none" stroke="url(#logoGradientAlt)" stroke-linecap="square" stroke-linejoin="miter" stroke-width="24"/>
+  </g>
+</svg>

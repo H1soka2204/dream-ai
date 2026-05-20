@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="empty-state">
+    <p class="eyebrow">404</p>
+    <h1>{{ t("Страница не найдена") }}</h1>
+    <p>{{ t("Ссылка устарела или адрес введен с ошибкой.") }}</p>
+    <a class="button button-primary" href="{{ url_for('main.index') }}">{{ t("На главную") }}</a>
+</section>
+{% endblock %}

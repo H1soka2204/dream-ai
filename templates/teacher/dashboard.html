@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="dashboard-shell">
+    <div class="dashboard-head">
+        <div>
+            <p class="eyebrow">{{ t("Кабинет преподавателя") }}</p>
+            <h1>{{ t(current_user.name) }}</h1>
+            <p>{{ t("Создавайте материалы, запускайте тесты и анализируйте результаты учеников.") }}</p>
+        </div>
+        <a class="button button-secondary" href="{{ url_for('main.courses') }}">{{ t("Посмотреть каталог") }}</a>
+    </div>
+
+    <div class="metric-grid">
+        <div class="metric-card"><span>{{ overview.courses|length }}</span><p>{{ t("Моих курсов") }}</p></div>
+        <div class="metric-card"><span>{{ overview.tests|length }}</span><p>{{ t("Тестов") }}</p></div>
+        <div class="metric-card"><span>{{ overview.students_count }}</span><p>{{ t("Учеников") }}</p></div>
+        <div class="metric-card"><span>{{ overview.avg_score }}%</span><p>{{ t("Средний балл") }}</p></div>
+    </div>
+
+    <section class="section inner-section forms-grid">
+        <form class="form-panel" method="post" action="{{ url_for('teacher.create_course') }}">
+            <p class="eyebrow">{{ t("Новый курс") }}</p>
+            <h2>{{ t("Добавить курс") }}</h2>
+            <label>{{ t("Название") }}
+                <input name="title" placeholder="{{ t('Например, Python Junior') }}" required>
+            </label>
+            <label>{{ t("Описание") }}
+                <textarea name="description" rows="4" placeholder="{{ t('Что изучит ученик') }}" required></textarea>
+            </label>
+            <div class="form-row">
+                <label>{{ t("Тема") }}
+                    <input name="topic" placeholder="Python">
+                </label>
+                <label>{{ t("Уровень") }}
+                    <select name="difficulty">
+                        <option value="beginner">{{ t("Начальный") }}</option>
+                        <option value="middle">{{ t("Средний") }}</option>
+                        <option value="advanced">{{ t("Продвинутый") }}</option>
+                    </select>
+                </label>
+            </div>
+            <label>{{ t("Акцент") }}
+                <select name="accent">
+                    <option value="blue">{{ t("Синий") }}</option>
+                    <option value="violet">{{ t("Фиолетовый") }}</option>
+                    <option value="teal">{{ t("Бирюзовый") }}</option>
+                    <option value="coral">{{ t("Коралловый") }}</option>
+                </select>
+            </label>
+            <button class="button button-primary" type="submit">{{ t("Сохранить курс") }}</button>
+        </form>
+
+        <form class="form-panel" method="post" action="{{ url_for('teacher.create_lesson') }}">
+            <p class="eyebrow">{{ t("Материал") }}</p>
+            <h2>{{ t("Добавить урок") }}</h2>
+            <label>{{ t("Курс") }}
+                <select name="course_id" required>
+                    {% for course in all_courses %}
+                        <option value="{{ course.id }}">{{ course.title }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>{{ t("Название") }}
+                <input name="title" placeholder="{{ t('Тема урока') }}" required>
+            </label>
+            <label>{{ t("Содержание") }}
+                <textarea name="content" rows="5" placeholder="{{ t('Краткий учебный материал') }}" required></textarea>
+            </label>
+            <div class="form-row">
+                <label>{{ t("Позиция") }}
+                    <input type="number" name="position" value="1" min="1">
+                </label>
+                <label>{{ t("Минуты") }}
+                    <input type="number" name="estimated_minutes" value="15" min="1">
+                </label>
+            </div>
+            <button class="button button-primary" type="submit">{{ t("Добавить материал") }}</button>
+        </form>
+
+        <form class="form-panel wide-form" method="post" action="{{ url_for('teacher.create_test') }}">
+            <p class="eyebrow">{{ t("AI-генерация") }}</p>
+            <h2>{{ t("Создать тест") }}</h2>
+            <div class="form-row">
+                <label>{{ t("Курс") }}
+                    <select name="course_id" required>
+                        {% for course in all_courses %}
+                            <option value="{{ course.id }}">{{ course.title }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>{{ t("Название теста") }}
+                    <input name="title" placeholder="{{ t('Итоговый тест') }}" required>
+                </label>
+            </div>
+            <label>{{ t("Описание") }}
+                <textarea name="description" rows="3" placeholder="{{ t('Что проверяет тест') }}"></textarea>
+            </label>
+            <div class="form-row">
+                <label>{{ t("Тема для AI") }}
+                    <input name="topic" placeholder="Python functions">
+                </label>
+                <label>{{ t("Сложность") }}
+                    <select name="difficulty">
+                        <option value="beginner">{{ t("Начальный") }}</option>
+                        <option value="middle">{{ t("Средний") }}</option>
+                        <option value="advanced">{{ t("Продвинутый") }}</option>
+                    </select>
+                </label>
+                <label>{{ t("Вопросов") }}
+                    <input type="number" name="question_count" value="5" min="1" max="25">
+                </label>
+            </div>
+            <div class="form-row">
+                <label>{{ t("Лимит минут") }}
+                    <input type="number" name="time_limit_minutes" value="20" min="1">
+                </label>
+                <label>{{ t("Проходной балл") }}
+                    <input type="number" name="passing_score" value="70" min="1" max="100">
+                </label>
+            </div>
+            <button class="button button-primary" type="submit">{{ t("Сгенерировать и сохранить") }}</button>
+        </form>
+    </section>
+
+    <section class="section inner-section two-column">
+        <div class="table-panel">
+            <div class="section-heading align-left">
+                <p class="eyebrow">{{ t("Курсы") }}</p>
+                <h2>{{ t("Мои курсы") }}</h2>
+            </div>
+            <div class="responsive-table">
+                <table>
+                    <thead><tr><th>{{ t("Курс") }}</th><th>{{ t("Тема") }}</th><th>{{ t("Уроки") }}</th><th>{{ t("Тесты") }}</th></tr></thead>
+                    <tbody>
+                        {% for course in overview.courses %}
+                            <tr>
+                                <td><a href="{{ url_for('main.course_detail', course_id=course.id) }}">{{ t(course.title) }}</a></td>
+                                <td>{{ course.topic }}</td>
+                                <td>{{ course.lessons|length }}</td>
+                                <td>{{ course.tests|length }}</td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="4">{{ t("Курсов пока нет") }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="table-panel">
+            <div class="section-heading align-left">
+                <p class="eyebrow">{{ t("Успеваемость") }}</p>
+                <h2>{{ t("Последние результаты") }}</h2>
+            </div>
+            <div class="responsive-table">
+                <table>
+                    <thead><tr><th>{{ t("Ученик") }}</th><th>{{ t("Тест") }}</th><th>{{ t("Балл") }}</th></tr></thead>
+                    <tbody>
+                        {% for result in overview.results[:8] %}
+                            <tr>
+                                <td>{{ t(result.student.name) }}</td>
+                                <td>{{ t(result.test.title) }}</td>
+                                <td>{{ result.score|round(0) }}%</td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="3">{{ t("Результатов пока нет") }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="test-layout">
+    <aside class="test-sidebar">
+        <p class="eyebrow">{{ t("Тест") }}</p>
+        <h1>{{ t(test.title) }}</h1>
+        <p>{{ t(test.description) }}</p>
+        <div class="timer" data-timer data-minutes="{{ test.time_limit_minutes }}">
+            <span data-timer-minutes>{{ test.time_limit_minutes }}</span>:<span data-timer-seconds>00</span>
+        </div>
+        <div class="test-meta">
+            <span>{{ test.questions|length }} {{ t("вопросов") }}</span>
+            <span>{{ t("Проходной балл") }} {{ test.passing_score }}%</span>
+        </div>
+    </aside>
+
+    <form class="question-form" method="post" data-test-form>
+        <input type="hidden" name="time_spent_seconds" value="0" data-time-spent>
+        {% for question in test.questions %}
+            <article class="question-card">
+                <div class="question-head">
+                    <span>{{ t("Вопрос") }} {{ loop.index }}</span>
+                    <small>{{ t(question.topic) }}</small>
+                </div>
+                <h2>{{ t(question.text) }}</h2>
+                <div class="answer-list">
+                    {% for answer in question.answers %}
+                        <label class="answer-option">
+                            <input type="radio" name="answer_{{ question.id }}" value="{{ answer.id }}" required>
+                            <span>{{ t(answer.text) }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </article>
+        {% endfor %}
+        <div class="sticky-submit">
+            <span>{{ t("Ответьте на все вопросы, затем отправьте тест.") }}</span>
+            <button class="button button-primary" type="submit">{{ t("Завершить тест") }}</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

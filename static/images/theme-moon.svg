@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="theme-moon-title">
+  <title id="theme-moon-title">Theme moon icon</title>
+  <defs>
+    <linearGradient id="themeMoonBg" x1="512" y1="0" x2="512" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#44479a"/>
+      <stop offset="1" stop-color="#111528"/>
+    </linearGradient>
+    <linearGradient id="themeMoonShape" x1="442" y1="173" x2="442" y2="836" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#b7b7b7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="108" fill="url(#themeMoonBg)"/>
+  <path d="M436 172c-132 57-224 188-224 341 0 205 166 371 371 371 112 0 213-50 281-129-42 16-88 25-136 25-211 0-382-171-382-382 0-83 27-160 90-226Z" fill="url(#themeMoonShape)"/>
+  <path d="M630 173c20 119 36 135 155 155-119 20-135 36-155 155-20-119-36-135-155-155 119-20 135-36 155-155Z" fill="url(#themeMoonShape)"/>
+</svg>

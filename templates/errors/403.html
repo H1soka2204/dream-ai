@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="empty-state">
+    <p class="eyebrow">403</p>
+    <h1>{{ t("Нет доступа") }}</h1>
+    <p>{{ t("Эта страница доступна другой роли пользователя.") }}</p>
+    <a class="button button-primary" href="{{ url_for('main.index') }}">{{ t("На главную") }}</a>
+</section>
+{% endblock %}

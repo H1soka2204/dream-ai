@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero course-hero accent-{{ course.accent }}">
+    <div>
+        <p class="eyebrow">{{ course.topic }} · {{ t(course.progress_label) }}</p>
+        <h1>{{ t(course.title) }}</h1>
+        <p>{{ t(course.description) }}</p>
+    </div>
+    <div class="hero-metrics">
+        <div><strong>{{ course.lessons|length }}</strong><span>{{ t("материалов") }}</span></div>
+        <div><strong>{{ course.tests|length }}</strong><span>{{ t("тестов") }}</span></div>
+        <div><strong>{{ t(course.teacher.name) if course.teacher else "AI Edu" }}</strong><span>{{ t("преподаватель") }}</span></div>
+    </div>
+</section>
+
+<section class="section two-column">
+    <div>
+        <div class="section-heading align-left">
+            <p class="eyebrow">{{ t("Материалы") }}</p>
+            <h2>{{ t("Учебная программа") }}</h2>
+        </div>
+        <div class="lesson-list">
+            {% for lesson in course.lessons|sort(attribute='position') %}
+                {% set lesson_prompt = t("Объясни простыми словами тему") ~ ": " ~ t(lesson.title) ~ ". " ~ t("Курс") ~ ": " ~ t(course.title) ~ ". " ~ t("Краткий материал") ~ ": " ~ t(lesson.content) ~ ". " ~ t("Дай понятное объяснение, пример и 3 вопроса для самопроверки.") %}
+                <a class="lesson-item lesson-link" href="{{ url_for('main.chat', prompt=lesson_prompt) }}" aria-label="{{ t('Открыть объяснение в AI-чате') }}: {{ t(lesson.title) }}">
+                    <span>{{ loop.index }}</span>
+                    <div>
+                        <h3>{{ t(lesson.title) }}</h3>
+                        <p>{{ t(lesson.content) }}</p>
+                        <small>{{ lesson.estimated_minutes }} {{ t("минут") }}</small>
+                    </div>
+                </a>
+            {% else %}
+                <div class="empty-state inline">
+                    <h3>{{ t("Материалы пока не добавлены") }}</h3>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <aside class="test-panel">
+        <p class="eyebrow">{{ t("Тестирование") }}</p>
+        <h2>{{ t("Доступные тесты") }}</h2>
+        {% for test in course.tests %}
+            <article class="test-row">
+                <div>
+                    <h3>{{ t(test.title) }}</h3>
+                    <p>{{ t(test.description) }}</p>
+                    <small>{{ test.questions|length }} {{ t("вопросов") }} · {{ test.time_limit_minutes }} {{ t("минут") }} · {{ t("проходной балл") }} {{ test.passing_score }}%</small>
+                </div>
+                <a class="button button-primary" href="{{ url_for('student.take_test', test_id=test.id) }}">{{ t("Начать тест") }}</a>
+            </article>
+        {% else %}
+            <div class="empty-state inline">
+                <h3>{{ t("Тесты скоро появятся") }}</h3>
+                <p>{{ t("Преподаватель может создать тест в своем кабинете.") }}</p>
+            </div>
+        {% endfor %}
+    </aside>
+</section>
+{% endblock %}

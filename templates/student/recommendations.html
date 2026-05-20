@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero compact">
+    <p class="eyebrow">{{ t("AI-рекомендации") }}</p>
+    <h1>{{ t("Индивидуальный план обучения") }}</h1>
+    <p>{{ t("Рекомендации создаются после тестирования на основе ошибок, слабых тем и результата.") }}</p>
+</section>
+
+<section class="section">
+    <div class="recommendation-grid recommendation-grid-featured">
+        {% for item in recommendations %}
+            <article class="recommendation-card recommendation-card-featured">
+                <div class="course-topline">
+                    <span>{{ t(item.result.test.title) if item.result else t("Общая рекомендация") }}</span>
+                    {% if item.result %}
+                        <span>{{ item.result.score|round(0) }}%</span>
+                    {% endif %}
+                    <span>{{ item.created_at.strftime("%d.%m.%Y") }}</span>
+                </div>
+                <h2>{{ item.summary }}</h2>
+                <p><strong>{{ t("Слабые темы") }}:</strong> {{ item.weak_topics }}</p>
+                <div class="plan-list">
+                    {% for line in item.plan.split('\n') %}
+                        <span>{{ line }}</span>
+                    {% endfor %}
+                </div>
+            </article>
+        {% else %}
+            <div class="empty-state inline">
+                <h2>{{ t("Рекомендаций пока нет") }}</h2>
+                <p>{{ t("Пройдите любой тест, чтобы AI подготовил персональный план.") }}</p>
+                <a class="button button-primary" href="{{ url_for('main.courses') }}">{{ t("Открыть курсы") }}</a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

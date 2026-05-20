@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-copy">
+        <p class="eyebrow">{{ t("Вход") }}</p>
+        <h1>{{ t("Продолжите обучение с того места, где остановились") }}</h1>
+        <p>{{ t("После входа откроется личный кабинет с прогрессом, историей тестов и AI-рекомендациями.") }}</p>
+    </div>
+    <form class="form-panel" method="post">
+        {% if next_url %}
+            <input type="hidden" name="next" value="{{ next_url }}">
+        {% endif %}
+        <label>Email
+            <input type="email" name="email" placeholder="student@ai.edu" required>
+        </label>
+        <label>{{ t("Пароль") }}
+            <input type="password" name="password" placeholder="{{ t('Введите пароль') }}" required>
+        </label>
+        <label class="check-row">
+            <input type="checkbox" name="remember">
+            <span>{{ t("Запомнить меня") }}</span>
+        </label>
+        <button class="button button-primary" type="submit">{{ t("Войти") }}</button>
+        <p class="form-note">{{ t("Нет аккаунта?") }} <a href="{{ url_for('auth.register') }}">{{ t("Зарегистрируйтесь") }}</a></p>
+    </form>
+</section>
+{% endblock %}
