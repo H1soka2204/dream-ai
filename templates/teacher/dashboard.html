@@ -131,7 +131,7 @@
             </div>
             <div class="responsive-table">
                 <table>
-                    <thead><tr><th>{{ t("Курс") }}</th><th>{{ t("Тема") }}</th><th>{{ t("Уроки") }}</th><th>{{ t("Тесты") }}</th></tr></thead>
+                    <thead><tr><th>{{ t("Курс") }}</th><th>{{ t("Тема") }}</th><th>{{ t("Уроки") }}</th><th>{{ t("Тесты") }}</th><th>{{ t("Действия") }}</th></tr></thead>
                     <tbody>
                         {% for course in overview.courses %}
                             <tr>
@@ -139,9 +139,14 @@
                                 <td>{{ course.topic }}</td>
                                 <td>{{ course.lessons|length }}</td>
                                 <td>{{ course.tests|length }}</td>
+                                <td>
+                                    <form method="post" action="{{ url_for('teacher.delete_course', course_id=course.id) }}" onsubmit="return confirm('&#1059;&#1076;&#1072;&#1083;&#1080;&#1090;&#1100; &#1082;&#1091;&#1088;&#1089;?');">
+                                        <button class="small-button danger-button" type="submit">&#1059;&#1076;&#1072;&#1083;&#1080;&#1090;&#1100;</button>
+                                    </form>
+                                </td>
                             </tr>
                         {% else %}
-                            <tr><td colspan="4">{{ t("Курсов пока нет") }}</td></tr>
+                            <tr><td colspan="5">{{ t("Курсов пока нет") }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -165,6 +170,36 @@
                             </tr>
                         {% else %}
                             <tr><td colspan="3">{{ t("Результатов пока нет") }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="section inner-section">
+        <div class="table-panel">
+            <div class="section-heading align-left">
+                <p class="eyebrow">&#1058;&#1077;&#1089;&#1090;&#1099;</p>
+                <h2>&#1052;&#1086;&#1080; &#1090;&#1077;&#1089;&#1090;&#1099;</h2>
+            </div>
+            <div class="responsive-table">
+                <table>
+                    <thead><tr><th>&#1058;&#1077;&#1089;&#1090;</th><th>&#1050;&#1091;&#1088;&#1089;</th><th>&#1042;&#1086;&#1087;&#1088;&#1086;&#1089;&#1086;&#1074;</th><th>&#1044;&#1077;&#1081;&#1089;&#1090;&#1074;&#1080;&#1103;</th></tr></thead>
+                    <tbody>
+                        {% for test in overview.tests %}
+                            <tr>
+                                <td>{{ t(test.title) }}</td>
+                                <td>{{ t(test.course.title) }}</td>
+                                <td>{{ test.questions|length }}</td>
+                                <td>
+                                    <form method="post" action="{{ url_for('teacher.delete_test', test_id=test.id) }}" onsubmit="return confirm('&#1059;&#1076;&#1072;&#1083;&#1080;&#1090;&#1100; &#1090;&#1077;&#1089;&#1090;?');">
+                                        <button class="small-button danger-button" type="submit">&#1059;&#1076;&#1072;&#1083;&#1080;&#1090;&#1100;</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="4">&#1058;&#1077;&#1089;&#1090;&#1086;&#1074; &#1087;&#1086;&#1082;&#1072; &#1085;&#1077;&#1090;</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>

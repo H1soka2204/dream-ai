@@ -88,6 +88,9 @@
                                         </select>
                                         <button class="small-button" type="submit">OK</button>
                                     </form>
+                                    <form method="post" action="{{ url_for('admin.delete_course', course_id=course.id) }}" onsubmit="return confirm('&#1059;&#1076;&#1072;&#1083;&#1080;&#1090;&#1100; &#1082;&#1091;&#1088;&#1089;?');">
+                                        <button class="small-button danger-button" type="submit">&#1059;&#1076;&#1072;&#1083;&#1080;&#1090;&#1100;</button>
+                                    </form>
                                 </td>
                                 <td>{{ t(course.teacher.name) if course.teacher else t("нет") }}</td>
                             </tr>
@@ -104,16 +107,21 @@
             </div>
             <div class="responsive-table">
                 <table>
-                    <thead><tr><th>{{ t("Тест") }}</th><th>{{ t("Курс") }}</th><th>{{ t("Вопросов") }}</th></tr></thead>
+                    <thead><tr><th>{{ t("Тест") }}</th><th>{{ t("Курс") }}</th><th>{{ t("Вопросов") }}</th><th>{{ t("Действия") }}</th></tr></thead>
                     <tbody>
                         {% for test in tests %}
                             <tr>
                                 <td>{{ t(test.title) }}</td>
                                 <td>{{ t(test.course.title) }}</td>
                                 <td>{{ test.questions|length }}</td>
+                                <td>
+                                    <form method="post" action="{{ url_for('admin.delete_test', test_id=test.id) }}" onsubmit="return confirm('&#1059;&#1076;&#1072;&#1083;&#1080;&#1090;&#1100; &#1090;&#1077;&#1089;&#1090;?');">
+                                        <button class="small-button danger-button" type="submit">&#1059;&#1076;&#1072;&#1083;&#1080;&#1090;&#1100;</button>
+                                    </form>
+                                </td>
                             </tr>
                         {% else %}
-                            <tr><td colspan="3">{{ t("Тестов пока нет") }}</td></tr>
+                            <tr><td colspan="4">{{ t("Тестов пока нет") }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>

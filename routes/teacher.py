@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from random import shuffle
 
@@ -6,11 +6,27 @@ from backend import db
 from models import Answer, Course, Lesson, Question, Test
 from services.ai_service import generate_questions
 from services.authz import role_required
+from services.content_delete_service import (
+    delete_course_with_related_data,
+    delete_test_with_related_data,
+)
 from services.i18n import t
 from services.stats_service import teacher_overview
 
 
 teacher_bp = Blueprint("teacher", __name__, url_prefix="/teacher")
+
+
+def _can_manage_course(course):
+    return current_user.role == "admin" or course.teacher_id == current_user.id
+
+
+def _can_manage_test(test):
+    if current_user.role == "admin":
+        return True
+    if test.teacher_id == current_user.id:
+        return True
+    return test.teacher_id is None and test.course and test.course.teacher_id == current_user.id
 
 
 def _prepared_answers(raw_answers):
@@ -53,7 +69,10 @@ def _prepared_answers(raw_answers):
 @role_required("teacher", "admin")
 def dashboard():
     overview = teacher_overview(current_user.id)
-    all_courses = Course.query.order_by(Course.created_at.desc()).all()
+    courses_query = Course.query
+    if current_user.role != "admin":
+        courses_query = courses_query.filter_by(teacher_id=current_user.id)
+    all_courses = courses_query.order_by(Course.created_at.desc()).all()
     return render_template(
         "teacher/dashboard.html",
         title=t("Кабинет преподавателя"),
@@ -87,8 +106,13 @@ def create_course():
 @login_required
 @role_required("teacher", "admin")
 def create_lesson():
+    course_id = request.form.get("course_id", type=int)
+    course = Course.query.get(course_id) if course_id else None
+    if course and not _can_manage_course(course):
+        abort(403)
+
     lesson = Lesson(
-        course_id=request.form.get("course_id", type=int),
+        course_id=course_id,
         title=request.form.get("title", "").strip(),
         content=request.form.get("content", "").strip(),
         position=request.form.get("position", default=1, type=int),
@@ -108,6 +132,10 @@ def create_lesson():
 @role_required("teacher", "admin")
 def create_test():
     course_id = request.form.get("course_id", type=int)
+    course = Course.query.get(course_id) if course_id else None
+    if course and not _can_manage_course(course):
+        abort(403)
+
     title = request.form.get("title", "").strip()
     topic = request.form.get("topic", "").strip() or title
     difficulty = request.form.get("difficulty", "middle")
@@ -156,3 +184,31 @@ def create_test():
     db.session.commit()
     flash(t("Тест создан. Вопросы сгенерированы AI-сервисом или локальным fallback."), "success")
     return redirect(url_for("main.course_detail", course_id=course_id))
+
+
+@teacher_bp.route("/courses/<int:course_id>/delete", methods=["POST"])
+@login_required
+@role_required("teacher", "admin")
+def delete_course(course_id):
+    course = Course.query.get_or_404(course_id)
+    if not _can_manage_course(course):
+        abort(403)
+
+    delete_course_with_related_data(course)
+    db.session.commit()
+    flash(t("Курс удалён."), "info")
+    return redirect(url_for("teacher.dashboard"))
+
+
+@teacher_bp.route("/tests/<int:test_id>/delete", methods=["POST"])
+@login_required
+@role_required("teacher", "admin")
+def delete_test(test_id):
+    test = Test.query.get_or_404(test_id)
+    if not _can_manage_test(test):
+        abort(403)
+
+    delete_test_with_related_data(test)
+    db.session.commit()
+    flash(t("Тест удалён."), "info")
+    return redirect(url_for("teacher.dashboard"))

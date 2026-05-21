@@ -4,11 +4,37 @@ from flask_login import current_user, login_required
 from backend import db
 from models import AIRecommendation, Course, Test, TestResult, User
 from services.authz import role_required
+from services.content_delete_service import (
+    delete_course_with_related_data,
+    delete_test_with_related_data,
+)
 from services.i18n import t
 from services.stats_service import platform_overview
 
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
+
+
+@admin_bp.route("/courses/<int:course_id>/delete", methods=["POST"])
+@login_required
+@role_required("admin")
+def delete_course(course_id):
+    course = Course.query.get_or_404(course_id)
+    delete_course_with_related_data(course)
+    db.session.commit()
+    flash(t("Курс удалён."), "info")
+    return redirect(url_for("admin.dashboard"))
+
+
+@admin_bp.route("/tests/<int:test_id>/delete", methods=["POST"])
+@login_required
+@role_required("admin")
+def delete_test(test_id):
+    test = Test.query.get_or_404(test_id)
+    delete_test_with_related_data(test)
+    db.session.commit()
+    flash(t("Тест удалён."), "info")
+    return redirect(url_for("admin.dashboard"))
 
 
 @admin_bp.route("/dashboard")
